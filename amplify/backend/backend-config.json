@@ -1,0 +1,9 @@
+{
+	"auth": {
+		"quickscan3e27f9c8": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	}
+}
