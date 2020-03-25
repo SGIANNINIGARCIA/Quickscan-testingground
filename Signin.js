@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native'
+import { StyleSheet, View, TextInput, Button, Image } from 'react-native'
 
 import { Auth } from 'aws-amplify';
 import {AuthenticationContext} from "./contexts/authentication"
@@ -33,6 +33,10 @@ export default function SignInPage (){
   } ;
     return (
       <View style={styles.container}>
+        <Image
+          style={{ width: 200, height: 200, alignSelf: 'center' }}
+          source={require('./assets/icon.png')}
+        />
       
         <TextInput
         onChangeText={value=> onChangeText('username', value)}
@@ -55,7 +59,9 @@ const styles = StyleSheet.create({
     height: 50,
     borderBottomWidth: 2,
     borderBottomColor: '#2196F3',
-    margin: 10
+    margin: 10,
+    
+
 
   },
   container: {

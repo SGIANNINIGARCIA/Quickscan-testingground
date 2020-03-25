@@ -1,7 +1,6 @@
 import 'react-native-gesture-handler';
 import React, {useContext} from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View} from 'react-native';
 
 import Amplify from '@aws-amplify/core'
 import config from './aws-exports'

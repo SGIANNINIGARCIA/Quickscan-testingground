@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Button, Image } from 'react-native'
 
 import { Auth } from 'aws-amplify';
 
@@ -43,6 +43,10 @@ export default function SignUpPage() {
   }
     return (
       <View style={styles.container}>
+        <Image
+          style={{ width: 200, height: 200, alignSelf: 'center' }}
+          source={require('./assets/icon.png')}
+        />
         <TextInput
         onChangeText={value=> onChangeText('username', value)}
         style={styles.input}
