@@ -10,8 +10,8 @@ import Profile from './Profile';
 
 const MainTab = createBottomTabNavigator();
 
-class MainTabs extends React.Component {
-      render() {
+function MainTabs (){
+      
         return (
             <NavigationContainer independent={true}>
             <MainTab.Navigator>
@@ -35,6 +35,6 @@ class MainTabs extends React.Component {
             </NavigationContainer>
       );
       }
-    }
+    
 
 export default MainTabs

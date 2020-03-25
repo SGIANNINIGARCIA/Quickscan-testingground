@@ -12,12 +12,13 @@ export default function SignInPage (){
     isAuthenticated: false,
   });
 
+  console.log("im here 3");
+
   const {setAuthentication} = useContext(AuthenticationContext)
 
   const onChangeText= (key, value) => {
       setUserInfo({...userInfo, [key]: value})
   };
-
   const signIn = () => {
     console.log(userInfo.username, userInfo.password)
     Auth.signIn(userInfo.username, userInfo.password)
