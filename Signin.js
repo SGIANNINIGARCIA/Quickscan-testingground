@@ -34,7 +34,7 @@ export default function SignInPage (){
     return (
       <View style={styles.container}>
         <Image
-          style={{ width: 200, height: 200, alignSelf: 'center' }}
+          style={styles.logo}
           source={require('./assets/icon.png')}
         />
       
@@ -60,13 +60,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: '#2196F3',
     margin: 10,
-    
-
-
   },
   container: {
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
   },
+  logo: {
+    width: 200, 
+    height: 200, 
+    alignSelf: 'center' 
+  }
 });

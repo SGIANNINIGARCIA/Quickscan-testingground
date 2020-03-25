@@ -44,7 +44,7 @@ export default function SignUpPage() {
     return (
       <View style={styles.container}>
         <Image
-          style={{ width: 200, height: 200, alignSelf: 'center' }}
+          style={styles.logo}
           source={require('./assets/icon.png')}
         />
         <TextInput
@@ -99,4 +99,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     justifyContent: 'center',
   },
+  logo: {
+    width: 200, 
+    height: 200, 
+    alignSelf: 'center' 
+  }
 });
