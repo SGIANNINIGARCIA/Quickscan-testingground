@@ -14,6 +14,9 @@ export default function MyList() {
   const [desiredItems, setDesiredItems] = useState([]);
   const [fetchedItems, setFetcheditems] = useState([]);
   const [isItLoading, setIfItsLoading] = useState(true);
+  const [searchbarState, setSearchBarState] = useState({
+    search: ''
+  });
 
   // Get function for the items
   const componentDidMount = async () => {
@@ -21,14 +24,14 @@ export default function MyList() {
       const response = await fetch('http://18.189.32.71:3000/items/')
       await response.json()
       .then((data) => {
-        setFetcheditems(data);
+        //setFetcheditems(data);
         setIfItsLoading(false);
-
         // cleaning the response
         data.map((item) =>{
           delete item._id;
           delete item.DESCRIPTION;
           setFetcheditems(() => [...fetchedItems, item])
+          console.log(item);
         })
       });
     }
@@ -48,18 +51,13 @@ export default function MyList() {
 
   const SearchFilterFunction = (text) => {
     //passing the inserted text in textinput
-    const newData = fetchedItems.filter(function(item) {
+    const newData = fetchedItems.filter((item) => {
       //applying filter for the inserted text in search bar
-      const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
+      const itemData = item.NAME ? item.NAME.toUpperCase() : ''.toUpperCase();
       const textData = text.toUpperCase();
       return itemData.indexOf(textData) > -1;
     });
-    this.setState({
-      //setting the filtered newData on datasource
-      //After setting the data it will automatically re-render the view
-      dataSource: newData,
-      search:text,
-    });
+    //setSearchBarState(() => [...searchbarState, {search: data}])
   }
 
     if (isItLoading === true) {
