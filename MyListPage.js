@@ -18,21 +18,24 @@ export default function MyList() {
     search: ''
   });
 
+  const componentDidMount = () => {
+    fetchItems();
+  }
+
   // Get function for the items
-  const componentDidMount = async () => {
+  const fetchItems = async () => {
     try {
       const response = await fetch('http://18.189.32.71:3000/items/')
       await response.json()
       .then((data) => {
         //setFetcheditems(data);
-        setIfItsLoading(false);
-        console.log(data)
         data.map((item) =>{
           delete item._id;
           delete item.DESCRIPTION;
           setFetcheditems(fetchedItems => [...fetchedItems, item]);
-
+          console.log(item);
         })
+        setIfItsLoading(false);
       });
     }
     catch (error) {
@@ -70,7 +73,7 @@ export default function MyList() {
       </View>
       <ScrollView>
         {fetchedItems.map((item)=> 
-        <View style={styles.itemList} key={item}> 
+        <View style={styles.itemList} key={item.NAME}> 
         <Text> Name: {item.NAME}  </Text> 
         <Text> Brand: {item.MANUFACTURER} </Text> 
         <Button title='Add'/>
