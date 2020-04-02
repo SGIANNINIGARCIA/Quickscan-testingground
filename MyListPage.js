@@ -26,14 +26,12 @@ export default function MyList() {
       .then((data) => {
         //setFetcheditems(data);
         setIfItsLoading(false);
-        // cleaning the response
+        console.log(data)
         data.map((item) =>{
           delete item._id;
           delete item.DESCRIPTION;
-          setFetcheditems(() => fetchedItems.concat(item))
-        })
-        .then(() => {
-          console.log(fetchedItems);
+          setFetcheditems(fetchedItems => [...fetchedItems, item]);
+
         })
       });
     }
@@ -59,7 +57,6 @@ export default function MyList() {
         </View>
       );
     }
-
   return (
     <View style={styles.screen}>
       <View>
