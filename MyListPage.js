@@ -30,8 +30,10 @@ export default function MyList() {
         data.map((item) =>{
           delete item._id;
           delete item.DESCRIPTION;
-          setFetcheditems(() => [...fetchedItems, item])
-          console.log(item);
+          setFetcheditems(() => fetchedItems.concat(item))
+        })
+        .then(() => {
+          console.log(fetchedItems);
         })
       });
     }
@@ -48,17 +50,6 @@ export default function MyList() {
   const addItemHandler = () =>{
     setDesiredItems(currentItems => [...desiredItems, enteredItem]);
   };
-
-  const SearchFilterFunction = (text) => {
-    //passing the inserted text in textinput
-    const newData = fetchedItems.filter((item) => {
-      //applying filter for the inserted text in search bar
-      const itemData = item.NAME ? item.NAME.toUpperCase() : ''.toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-    //setSearchBarState(() => [...searchbarState, {search: data}])
-  }
 
     if (isItLoading === true) {
       componentDidMount();
@@ -80,14 +71,12 @@ export default function MyList() {
           placeholder="Type Here..."
           />
       </View>
-      <View style={styles.inputContainer}> 
-        <TextInput placeholder="ITEM" style={styles.input} onChangeText={itemInputHandler} value={enteredItem}/>
-        <Button title="ADD" onPress={addItemHandler}/>
-      </View>
       <ScrollView>
-        {desiredItems.map((item)=> 
+        {fetchedItems.map((item)=> 
         <View style={styles.itemList} key={item}> 
-        <Text> {item}  </Text> 
+        <Text> Name: {item.NAME}  </Text> 
+        <Text> Brand: {item.MANUFACTURER} </Text> 
+        <Button title='Add'/>
         </View>
          )}
       </ScrollView>
