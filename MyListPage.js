@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { SearchBar } from 'react-native-elements';
+import axios from 'axios';
 
 
 import Amplify from '@aws-amplify/core'
 import config from './aws-exports'
 Amplify.configure(config)
-
-
-
-
 
 export default function MyList() {
 
@@ -24,107 +21,89 @@ export default function MyList() {
     search: ''
   });
 
-  const Mount = () => {
-    fetchItems();
-  }
-
-  useEffect(()=>{
-    fetch(URL)
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson.items;
-    })
-    .then( items  => {
-      setFetcheditems(items);
-      setIfItsLoading(false);
-    })
-    .catch( error => {
-      console.error(error);
-    });
-
-  } , []);
- /*
   // Get function for the items
   const fetchItems = async () => {
     try {
-      const response = await fetch('http://18.189.32.71:3000/items/')
-      await response.json()
-      .then((data) => {
-        data.map((item) =>{
-          delete item._id;
-          delete item.DESCRIPTION;
-          setFetcheditems(fetchedItems => [...fetchedItems, item]);
-        })
-        setIfItsLoading(false);
-      });
+      await axios.get('http://18.189.32.71:3000/items/')
+        .then((res) => {
+          res.map((item) => {
+            delete item._id;
+            delete item.DESCRIPTION;
+            setFetcheditems(fetchedItems => [...fetchedItems, item]);
+          })
+          setIfItsLoading(false);
+        });
     }
     catch (error) {
       console.error(error);
     }
   }
-  */
-  
+
+
   // Searchbar function handlers
-  const itemInputHandler = (textEntered)=> {
+  const itemInputHandler = (textEntered) => {
     setEnteredItem(textEntered);
   };
 
-  const addItemHandler = () =>{
+  const addItemHandler = () => {
     setDesiredItems(currentItems => [...desiredItems, enteredItem]);
   };
 
-    if (isItLoading === true) {
-      Mount();
-      return (
-        <View style={{ flex: 1, paddingTop: 300 }}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
-  return (
-    <View style={styles.screen}>
-      <View>
-      <SearchBar
-      onChangeText={itemInputHandler} 
-      value={enteredItem}
-          onChangeText={text => SearchFilterFunction(text)}
-          onClear={text => SearchFilterFunction('')}
-          placeholder="Type Here..."
-          />
+  if (isItLoading === true) {
+
+    fetchItems();
+    return (
+      <View style={{ flex: 1, paddingTop: 300 }}>
+        <ActivityIndicator />
       </View>
-      <ScrollView>
-        {fetchedItems.map((item)=> 
-        <View style={styles.itemList} key={item.NAME}> 
-        <Text> Name: {item.NAME}  </Text> 
-        <Text> Brand: {item.MANUFACTURER} </Text> 
-        <Button title='Add'/>
+    );
+  } else {
+    return (
+      <View style={styles.screen}>
+        <View>
+          <SearchBar
+            onChangeText={itemInputHandler}
+            value={enteredItem}
+            onChangeText={text => SearchFilterFunction(text)}
+            onClear={text => SearchFilterFunction('')}
+            placeholder="Type Here..."
+          />
         </View>
-         )}
-      </ScrollView>
-    </View>
-  );
+        <ScrollView>
+          {fetchedItems.map((item) =>
+            <View style={styles.itemList} key={item.NAME}>
+              <Text> Name: {item.NAME}  </Text>
+              <Text> Brand: {item.MANUFACTURER} </Text>
+              <Button title='Add' />
+            </View>
+          )}
+        </ScrollView>
+      </View>
+    );
+  }
 }
+
 
 const styles = StyleSheet.create({
   screen: {
     padding: 60
   },
-  inputContainer:{
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+  inputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center'
   },
-  input:{
+  input: {
     borderBottomColor: 'black',
-   borderBottomWidth: 1, 
-   padding: 10, 
-   width: '80%' 
-  }, 
-  itemList:{
+    borderBottomWidth: 1,
+    padding: 10,
+    width: '80%'
+  },
+  itemList: {
     padding: 10,
     backgroundColor: '#ccc',
     borderColor: 'black',
-    borderWidth: 1,   
+    borderWidth: 1,
     marginVertical: 10
   }
 });
