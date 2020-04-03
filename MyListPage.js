@@ -8,6 +8,10 @@ import Amplify from '@aws-amplify/core'
 import config from './aws-exports'
 Amplify.configure(config)
 
+constItemList = (props) => {
+
+}
+
 export default function MyList() {
 
   const URL = 'http://18.189.32.71:3000/items/'
@@ -24,14 +28,14 @@ export default function MyList() {
   // Get function for the items
   const fetchItems = async () => {
     try {
-      await axios.get('http://18.189.32.71:3000/items/')
+       const response = await axios.get('http://18.189.32.71:3000/items/')
         .then((res) => {
-          res.map((item) => {
+          res.data.map((item) => {
             delete item._id;
             delete item.DESCRIPTION;
             setFetcheditems(fetchedItems => [...fetchedItems, item]);
           })
-          setIfItsLoading(false);
+          setIfItsLoading(false)
         });
     }
     catch (error) {
@@ -70,7 +74,7 @@ export default function MyList() {
           />
         </View>
         <ScrollView>
-          {fetchedItems.map((item) =>
+          {console.log(fetchedItems.length), fetchedItems.map((item) =>
             <View style={styles.itemList} key={item.NAME}>
               <Text> Name: {item.NAME}  </Text>
               <Text> Brand: {item.MANUFACTURER} </Text>
