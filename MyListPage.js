@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 
@@ -7,7 +7,13 @@ import Amplify from '@aws-amplify/core'
 import config from './aws-exports'
 Amplify.configure(config)
 
+
+
+
+
 export default function MyList() {
+
+  const URL = 'http://18.189.32.71:3000/items/'
 
   // States
   const [enteredItem, setEnteredItem] = useState('');
@@ -18,22 +24,36 @@ export default function MyList() {
     search: ''
   });
 
-  const componentDidMount = () => {
+  const Mount = () => {
     fetchItems();
   }
 
+  useEffect(()=>{
+    fetch(URL)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson.items;
+    })
+    .then( items  => {
+      setFetcheditems(items);
+      setIfItsLoading(false);
+    })
+    .catch( error => {
+      console.error(error);
+    });
+
+  } , []);
+ /*
   // Get function for the items
   const fetchItems = async () => {
     try {
       const response = await fetch('http://18.189.32.71:3000/items/')
       await response.json()
       .then((data) => {
-        //setFetcheditems(data);
         data.map((item) =>{
           delete item._id;
           delete item.DESCRIPTION;
           setFetcheditems(fetchedItems => [...fetchedItems, item]);
-          console.log(item);
         })
         setIfItsLoading(false);
       });
@@ -42,6 +62,7 @@ export default function MyList() {
       console.error(error);
     }
   }
+  */
   
   // Searchbar function handlers
   const itemInputHandler = (textEntered)=> {
@@ -53,7 +74,7 @@ export default function MyList() {
   };
 
     if (isItLoading === true) {
-      componentDidMount();
+      Mount();
       return (
         <View style={{ flex: 1, paddingTop: 300 }}>
           <ActivityIndicator />
