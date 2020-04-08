@@ -1,96 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, ScrollView, ActivityIndicator, FlatList } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import axios from 'axios';
+import NumericInput from 'react-native-numeric-input'
 
 
 import Amplify from '@aws-amplify/core'
 import config from './aws-exports'
 Amplify.configure(config)
 
-constItemList = (props) => {
-
-}
-
 export default function MyList() {
 
-  const URL = 'http://18.189.32.71:3000/items/'
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [list, setList] = useState([]);
 
-  // States
-  const [enteredItem, setEnteredItem] = useState('');
-  const [desiredItems, setDesiredItems] = useState([]);
-  const [fetchedItems, setFetcheditems] = useState([]);
-  const [isItLoading, setIfItsLoading] = useState(true);
-  const [searchbarState, setSearchBarState] = useState({
-    search: ''
+  useEffect(() => {
+    fetch('http://18.189.32.71:3000/items/')
+      .then((response) => response.json())
+      .then((json) => setData(json))
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   });
 
-  // Get function for the items
-  const fetchItems = async () => {
-    try {
-       const response = await axios.get('http://18.189.32.71:3000/items/')
-        .then((res) => {
-          res.data.map((item) => {
-            delete item._id;
-            delete item.DESCRIPTION;
-            setFetcheditems(fetchedItems => [...fetchedItems, item]);
-          })
-          setIfItsLoading(false)
-        });
-    }
-    catch (error) {
-      console.error(error);
-    }
-  }
-
-
-  // Searchbar function handlers
-  const itemInputHandler = (textEntered) => {
-    setEnteredItem(textEntered);
-  };
-
-  const addItemHandler = () => {
-    setDesiredItems(currentItems => [...desiredItems, enteredItem]);
-  };
-
-  if (isItLoading === true) {
-
-    fetchItems();
-    return (
-      <View style={{ flex: 1, paddingTop: 300 }}>
-        <ActivityIndicator />
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.screen}>
-        <View>
+  return (
+    <View style={styles.screen}>
+      <View>
           <SearchBar
-            onChangeText={itemInputHandler}
-            value={enteredItem}
-            onChangeText={text => SearchFilterFunction(text)}
-            onClear={text => SearchFilterFunction('')}
             placeholder="Type Here..."
           />
         </View>
-        <ScrollView>
-          {console.log(fetchedItems.length), fetchedItems.map((item) =>
-            <View style={styles.itemList} key={item.NAME}>
-              <Text> Name: {item.NAME}  </Text>
-              <Text> Brand: {item.MANUFACTURER} </Text>
-              <Button title='Add' />
+      {isLoading ? <ActivityIndicator/> : (
+        <FlatList
+          data={data}
+          keyExtractor={({ _id }, index) => _id}
+          renderItem={({ item }) => (
+            <View style={styles.itemList} >
+              <Text>Item: {item.NAME}</Text>
+              <Text>Manufacturer: {item.MANUFACTURER}</Text>
+              <View style={styles.addButtonContainer}>
+                <NumericInput onChange={value => console.log(value)} />
+                <Button title='add'/>
+              </View>
             </View>
           )}
-        </ScrollView>
-      </View>
-    );
-  }
-}
+        />
+      )}
+    </View>
+  );
+};
+
+
 
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 60
+    padding: 40
   },
   inputContainer: {
     flexDirection: 'row',
@@ -108,6 +72,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#ccc',
     borderColor: 'black',
     borderWidth: 1,
-    marginVertical: 10
+    marginVertical: 10,
+    flexDirection: 'column'
+  },
+  addButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 20,
+    alignItems: 'center'
   }
 });
