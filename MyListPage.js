@@ -14,6 +14,12 @@ export default function MyList() {
   const [data, setData] = useState([]);
   const [list, setList] = useState([]);
 
+  const addItem = (item) => {
+
+    //setList(...list, item)
+    console.log('item added', item)
+  }
+
   useEffect(() => {
     fetch('http://18.189.32.71:3000/items/')
       .then((response) => response.json())
@@ -39,7 +45,10 @@ export default function MyList() {
               <Text>Manufacturer: {item.MANUFACTURER}</Text>
               <View style={styles.addButtonContainer}>
                 <NumericInput onChange={value => console.log(value)} />
-                <Button title='add'/>
+                <Button
+                title='add'
+                  onPress={()=> {addItem(item)}}
+                  />
               </View>
             </View>
           )}
