@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, ScrollView, ActivityIndicator, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import NumericInput from 'react-native-numeric-input'
 
@@ -15,15 +15,20 @@ export default function MyList() {
   const [list, setList] = useState([]);
 
   const addItem = (item) => {
-
-    //setList(...list, item)
+    setList(oldList => [...oldList, item]);
     console.log('item added', item)
   }
-
+  
   useEffect(() => {
     fetch('http://18.189.32.71:3000/items/')
       .then((response) => response.json())
-      .then((json) => setData(json))
+      .then((json) => { 
+        json.map((item) =>{
+          delete item.DESCRIPTION;
+          item.QUANTITY = 0;
+        })
+        setData(json)
+      })
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   });
@@ -44,11 +49,12 @@ export default function MyList() {
               <Text>Item: {item.NAME}</Text>
               <Text>Manufacturer: {item.MANUFACTURER}</Text>
               <View style={styles.addButtonContainer}>
-                <NumericInput onChange={value => console.log(value)} />
-                <Button
-                title='add'
-                  onPress={()=> {addItem(item)}}
-                  />
+                <NumericInput onChange={(value) => {
+                  item.QUANTITY = value;
+                  }} />
+                <TouchableOpacity onPress={()=> {addItem(item)}} style={styles.button} >
+                  <Text>Add Item</Text>
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -89,5 +95,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
     alignItems: 'center'
+  },
+  button: {
+    alignItems: "center",
+    backgroundColor: "#DDDDDD",
+    padding: 10
   }
 });
