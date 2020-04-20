@@ -7,7 +7,7 @@ import Amplify from '@aws-amplify/core'
 import config from './aws-exports'
 Amplify.configure(config)
 
-import AuthenticationContextProvider from "./contexts/authentication"
+import AuthenticationContextProvider from "./contexts/Authentication.js"
 import Entry from "./Entry"
 
 export default function App() {
@@ -26,7 +26,7 @@ export default function App() {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: '#383961',
       justifyContent: 'center',
     },
   });

@@ -7,14 +7,13 @@ import config from './aws-exports'
 Amplify.configure(config)
 
 import SignInTabs from "./Tabs"
-import MainTabs from "./HomeTab"
-import {AuthenticationContext} from "./contexts/authentication"
+import MainTabs from "./components/MainTabs"
+import {AuthenticationContext} from "./contexts/Authentication"
 
 export default function Entry(){
 
   const {isUserAuthenticated} = useContext(AuthenticationContext)
 
-  //login disabled for testing purposes
   if(true){
     return (
       <View style={styles.container}>
@@ -34,7 +33,7 @@ export default function Entry(){
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#5f758e',
     justifyContent: 'center',
   },
 });

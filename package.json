@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.5",
+    "@react-native-community/netinfo": "^5.7.1",
     "@react-navigation/bottom-tabs": "^5.1.0",
     "@react-navigation/native": "^5.0.8",
     "@react-navigation/stack": "^5.2.10",
@@ -16,6 +17,8 @@
     "aws-amplify-react-native": "^3.2.2",
     "axios": "^0.19.2",
     "expo": "~36.0.0",
+    "expo-barcode-scanner": "~8.0.0",
+    "jsbarcode": "^3.11.0",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
@@ -23,19 +26,24 @@
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-numeric-input": "^1.8.3",
+    "react-native-popup-dialog": "^0.18.3",
     "react-native-reanimated": "~1.4.0",
     "react-native-safe-area-context": "0.6.0",
     "react-native-safe-area-view": "^1.0.0",
     "react-native-screens": "2.0.0-alpha.12",
     "react-native-search-bar": "^3.5.1",
+    "react-native-svg": "9.13.3",
     "react-native-vector-icons": "^6.6.0",
     "react-native-web": "~0.11.7",
     "react-navigation": "^4.3.7",
-    "react-navigation-stack": "^2.3.11"
+    "react-navigation-stack": "^2.3.11",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
-    "babel-preset-expo": "~8.0.0"
+    "babel-preset-expo": "~8.0.0",
+    "typescript": "^3.8.3"
   },
   "private": true
 }
