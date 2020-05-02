@@ -9,7 +9,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import NumericInput from "react-native-numeric-input";
 import { useSelector, useDispatch } from "react-redux";
-import { addItem, deleteItem, changeQuantity, changeTotal } from "../redux/ducks";
+import { addItem, deleteItem, changeQuantity } from "../redux/cart/actions";
 
 const ListItem = ({ item }) => {
   //const [quantity, setQuantity] = useState(1); //default quantity is 1
@@ -29,8 +29,8 @@ const ListItem = ({ item }) => {
   return (
     <TouchableOpacity style={styles.listItem}>
       <View style={styles.listItemView}>
-        <Text> {item.name} </Text>
-        <Text style={{fontWeight: "bold"}}> ${updatedPrice} </Text>
+        <Text style={styles.itemText}> {item.name} </Text>
+        <Text style={styles.price}> ${updatedPrice} </Text>
         <View style={styles.iconView}>
           <NumericInput
             value={item.quantity}
@@ -93,6 +93,18 @@ const styles = StyleSheet.create({
     padding: 0,
     fontSize: 18,
   },
+  itemText: {
+    textAlign: 'left',
+    maxWidth: 95, 
+    marginVertical: 10,
+    padding: 5
+  },
+  price: {
+    fontWeight: "bold",
+    textAlign:'right',
+    justifyContent: 'flex-end',
+    margin: 10
+  }
 });
 
 export default ListItem;

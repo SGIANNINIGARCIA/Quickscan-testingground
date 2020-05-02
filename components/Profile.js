@@ -1,60 +1,79 @@
-import React, {useState} from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
-//AWS
-import { withAuthenticator } from 'aws-amplify-react-native'
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+import React, {useState, useContext} from 'react';
+import { StyleSheet, Text, View, TextInput, Alert} from 'react-native';
+
+
 import { Avatar, ListItem } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+
+import { Auth } from 'aws-amplify';
+import {AuthenticationContext} from "../contexts/Authentication"
 
 
 //Profile class--------------------------------------------
 function Profile() {
   
-  const [userInfo, setUserInfo] = useState({
-    currentPassword: '',
-    newPassword: '',
-
+  const [userInfo, setUserInfo, setSignOut] = useState({
+    currentPassword: 'test_password',
+    newPassword: 'test_new',
+    signOut: 'test_signOut'
   });
 
-  const onChangeText = (key, value) => {
+
+//Authecntication----------------------------------------------------- 
+
+
+  const {setAuthentication} = useContext(AuthenticationContext)
+
+  const onChange_new = (key, value) => {
     setUserInfo({...userInfo, [key]: value})
   };
 
 //New function---------------------------------------------
 
-
-//MAY'S COMMENT: 
-//changpassword should be using the API from Amplify
-//fetching from our user pools to get password
-//take a look at how Sandro's calling context
-
   function changePassword (currentPassword, newPassword) {
-    //find url needed ex /changepassword
-    fetch('http://18.189.32.71:3000/barcode/',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          "currentPassword": currentPassword,
-          "newPassword" : newPassword
-          //needs to have another attribute (array of onjects) here to ppost
-          //the list of items that are stored in cart at checkout time
-        //pass in the current state 
 
+    if(!userInfo.currentPassword || !userInfo.newPassword )
+    {
+      Alert.alert('Missing fields', 'Please fill in all fields')
+    }
+
+    else{
+    Auth.currentAuthenticatedUser()
+    .then(user => {
+        Alert.alert('Confirmed','Password has been Change') 
+        return Auth.changePassword(user, currentPassword, newPassword);  
+        
+      })
+    
+    .then((data) => {
+     
+    })
+    .catch(err => {console.log('error', err)
+      Alert.alert('Invalid','Current Password')
+    })
+  } 
+  
+  }
+
+
+//-------------Sign-out function---------------
+  function userSignOut(){
+  
+    
+    Auth.signOut()
+      .then((data) => {
+          console.log(data) 
+          //Alert.alert("data", data) 
+          setAuthentication(false)
         })
 
-        
-    })
-    .then((response) => response.json())
-    .then((data) => {
-    console.log('Success:', data);
-})
-
-  }
+      .catch(err => {
+        console.log(err) 
+        Alert.alert("Logout error!!", err)
+      });
+  
+    }
   
 //create a new Date instance----------------------
 const date = new Date()
@@ -87,32 +106,11 @@ else {
             rounded   
             source={{
               uri:
-                'https://i.imgur.com/icikekY.jpg',
+                // 
+                'https://imgur.com/t/earth_day/3SOrwqu'
               }}
-            //showEditButton
+            showEditButton
         />
-
-            {/* don't need this anymore */}
-            {/* <Text style = {{textAlign: 'center', textAlignVertical: 'center', 
-              color: '#383961', fontWeight: 'bold',  flex: 1, marginTop: 0, 
-              fontWeight: 'bold', fontSize: 30, }}>
-              Good {timeOfDay}! 
-              {"\n"}
-              {"\n"}
-              It's currently 
-              {date.getHours()%12}:{date.getMinutes().toString().length === 2? 
-              date.getMinutes(): '0' + date.getMinutes()} 
-              { date.getHours() >= 12 && date.getMinutes() >0? ' PM': 
-              date.getHours() > 12? ' PM': ' AM'}
-
-              {"\n"}
-              {"\n"}
-            </Text> */}
-
-          {/* need a button to change password 
-            ideally, we'll have a flag, to indicate the button is pressed, then render
-            the change password form
-          */}
           <Text style = {{alignSelf: 'center', fontSize: 25, marginBottom: 20}}>
               Change Password 
           </Text>
@@ -121,64 +119,49 @@ else {
               Current Password
           </Text>
 
-          <TextInput onChangeText={value=> onChangeText({currentPassword: value})} style = {{
-              height: 50,
-              borderWidth: 1,
-              borderColor: '#3b1f2b',
-              margin: 23,
-              marginTop: 1,
-              borderRadius: 3,
-              textAlign: 'center',
-              fontSize: 25,
-              color: '#FFFF',
-              //fontFamily: 'Times New Roman',
-              fontWeight: 'normal',
-              //padding: 20,
-              //lineHeight: 25,
-            }}>
+          <TextInput 
+          onChangeText=
+          {value=> onChange_new('currentPassword', value)}
+          
+          style = {styles.textInput}>
           </TextInput >
 
           <Text style = {{alignSelf: 'center'}}> 
             New Password
           </Text>
 
-          <TextInput  onChangeText={value=> onChangeText({newPassword: value})} style = {{
-              height: 50,
-              borderWidth: 1,
-              borderColor: '#3b1f2b',
-              margin: 23,
-              marginTop: 1,
-              borderRadius: 3,
-              textAlign: 'center',
-              fontSize: 25,
-              color: '#FFFF',
-              //fontFamily: 'Times New Roman',
-              fontWeight: 'normal',
-              //padding: 20,
-              //lineHeight: 25,
-              }}>
+          <TextInput  
+          onChangeText={value=> onChange_new('newPassword', value)} 
+          style = {styles.textInput}>
           </TextInput>
 
           <TouchableOpacity  title = 'Change Password' 
-              onPress = {() => {changePassword(userInfo.currentPassword, userInfo.newPassword)} }
-              style = {{backgroundColor: "#bdc667",margin: 5, 
-              color: 'yellow', borderWidth: 1, borderColor: '#2196F3', 
-              height: 50, width: 140, alignSelf: 'center', 
-              justifyContent: 'center', borderRadius: 6}} 
+              onPress = {() => changePassword(userInfo.currentPassword, userInfo.newPassword) }
+              style = {styles.button} 
             > 
 
             <Text 
-              style = {{textAlign: 'center', 
-              textAlignVertical: 'center', color: '#FFFF', 
-              fontWeight: 'bold' }}>
+              style = {styles.text}>
                 Change Password
             </Text>  
 
           </TouchableOpacity>
 
+      
+          <TouchableOpacity
+            style ={styles.button_signout}       
+            onPress={() => {userSignOut()}}
+          >
+            <Text
+            style={styles.text}
+            > SIGN OUT </Text>
+          </TouchableOpacity>
+        
+
       </View>
       
-    );
+    ); 
+     
   
 }
 //Styling------------------------------------------
@@ -199,6 +182,9 @@ const styles = StyleSheet.create ({
     //padding: 20,
     //lineHeight: 25,
   },
+  text: {textAlign: 'center', 
+  textAlignVertical: 'center', color: '#FFFF', 
+  fontWeight: 'bold' },
   container: {
     flex: 1,
     backgroundColor: '#8baab5',
@@ -206,8 +192,31 @@ const styles = StyleSheet.create ({
     justifyContent: 'center',
     color: "#ffff",
   },
+  textInput: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#3b1f2b',
+    margin: 23,
+    marginTop: 1,
+    borderRadius: 3,
+    textAlign: 'center',
+    fontSize: 25,
+    color: '#FFFF',
+    //fontFamily: 'Times New Roman',
+    fontWeight: 'normal',
+    //padding: 20,
+    //lineHeight: 25,
+  },
+  button: {backgroundColor: "#bdc667",margin: 5, 
+  color: 'yellow', borderWidth: 1, borderColor: '#2196F3', 
+  height: 50, width: 140, alignSelf: 'center', 
+  justifyContent: 'center', borderRadius: 6},
+
+  button_signout: {backgroundColor: "#03A9F4",margin: 5, 
+  color: 'yellow', borderWidth: 1, borderColor: '#2196F3', 
+  height: 50, width: 140, alignSelf: 'center', 
+  justifyContent: 'center', borderRadius: 6, marginTop: 100}
 
 })
-
+//Export----------------------------------------------------
 export default Profile;
-

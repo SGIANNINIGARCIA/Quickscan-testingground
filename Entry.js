@@ -14,7 +14,7 @@ export default function Entry(){
 
   const {isUserAuthenticated} = useContext(AuthenticationContext)
 
-  if(true){
+  if(isUserAuthenticated === true){
     return (
       <View style={styles.container}>
         <MainTabs />
